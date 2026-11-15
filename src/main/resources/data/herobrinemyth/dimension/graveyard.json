@@ -1,0 +1,16 @@
+{
+  "type": "herobrinemyth:graveyard",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "minecraft:soul_sand_valley",
+      "lakes": false,
+      "features": false,
+      "layers": [
+        { "block": "minecraft:bedrock", "height": 1 },
+        { "block": "minecraft:dirt", "height": 3 },
+        { "block": "minecraft:grass_block", "height": 1 }
+      ]
+    }
+  }
+}

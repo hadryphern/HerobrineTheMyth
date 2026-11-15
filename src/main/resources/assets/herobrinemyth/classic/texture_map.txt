@@ -1,0 +1,544 @@
+# 1.7.10 -> 1.20.1 texture names, and Beta terrain.png tiles. Names only.
+blocks/beacon block/beacon
+blocks/bedrock block/bedrock
+blocks/bookshelf block/bookshelf
+blocks/brewing_stand block/brewing_stand
+blocks/brewing_stand_base block/brewing_stand_base
+blocks/brick block/bricks
+blocks/cactus_bottom block/cactus_bottom
+blocks/cactus_side block/cactus_side
+blocks/cactus_top block/cactus_top
+blocks/cake_bottom block/cake_bottom
+blocks/cake_inner block/cake_inner
+blocks/cake_side block/cake_side
+blocks/cake_top block/cake_top
+blocks/cauldron_bottom block/cauldron_bottom
+blocks/cauldron_inner block/cauldron_inner
+blocks/cauldron_side block/cauldron_side
+blocks/cauldron_top block/cauldron_top
+blocks/clay block/clay
+blocks/coal_block block/coal_block
+blocks/coal_ore block/coal_ore
+blocks/cobblestone block/cobblestone
+blocks/cobblestone_mossy block/mossy_cobblestone
+blocks/comparator_off block/comparator
+blocks/comparator_on block/comparator_on
+blocks/crafting_table_front block/crafting_table_front
+blocks/crafting_table_side block/crafting_table_side
+blocks/crafting_table_top block/crafting_table_top
+blocks/daylight_detector_side block/daylight_detector_side
+blocks/daylight_detector_top block/daylight_detector_top
+blocks/deadbush block/dead_bush
+blocks/destroy_stage_0 block/destroy_stage_0
+blocks/destroy_stage_1 block/destroy_stage_1
+blocks/destroy_stage_2 block/destroy_stage_2
+blocks/destroy_stage_3 block/destroy_stage_3
+blocks/destroy_stage_4 block/destroy_stage_4
+blocks/destroy_stage_5 block/destroy_stage_5
+blocks/destroy_stage_6 block/destroy_stage_6
+blocks/destroy_stage_7 block/destroy_stage_7
+blocks/destroy_stage_8 block/destroy_stage_8
+blocks/destroy_stage_9 block/destroy_stage_9
+blocks/diamond_block block/diamond_block
+blocks/diamond_ore block/diamond_ore
+blocks/dirt block/dirt
+blocks/dispenser_front_vertical block/dispenser_front_vertical
+blocks/door_iron_lower block/iron_door_bottom
+blocks/door_iron_upper block/iron_door_top
+blocks/door_wood_lower block/oak_door_bottom
+blocks/door_wood_upper block/oak_door_top
+blocks/dragon_egg block/dragon_egg
+blocks/dropper_front_vertical block/dropper_front_vertical
+blocks/emerald_block block/emerald_block
+blocks/emerald_ore block/emerald_ore
+blocks/enchanting_table_bottom block/enchanting_table_bottom
+blocks/enchanting_table_side block/enchanting_table_side
+blocks/enchanting_table_top block/enchanting_table_top
+blocks/end_stone block/end_stone
+blocks/farmland_dry block/farmland
+blocks/farmland_wet block/farmland_moist
+blocks/fern block/fern
+blocks/flower_dandelion block/dandelion
+blocks/flower_pot block/flower_pot
+blocks/flower_rose block/poppy
+blocks/furnace_front_off block/furnace_front
+blocks/furnace_front_on block/furnace_front_on
+blocks/furnace_side block/furnace_side
+blocks/furnace_top block/furnace_top
+blocks/glass block/glass
+blocks/glass_black block/black_stained_glass
+blocks/glass_blue block/blue_stained_glass
+blocks/glass_brown block/brown_stained_glass
+blocks/glass_cyan block/cyan_stained_glass
+blocks/glass_gray block/gray_stained_glass
+blocks/glass_green block/green_stained_glass
+blocks/glass_light_blue block/light_blue_stained_glass
+blocks/glass_lime block/lime_stained_glass
+blocks/glass_magenta block/magenta_stained_glass
+blocks/glass_orange block/orange_stained_glass
+blocks/glass_pane_top block/glass_pane_top
+blocks/glass_pink block/pink_stained_glass
+blocks/glass_purple block/purple_stained_glass
+blocks/glass_red block/red_stained_glass
+blocks/glass_silver block/light_gray_stained_glass
+blocks/glass_white block/white_stained_glass
+blocks/glass_yellow block/yellow_stained_glass
+blocks/glowstone block/glowstone
+blocks/gold_block block/gold_block
+blocks/gold_ore block/gold_ore
+blocks/grass_side block/grass_block_side
+blocks/grass_side_overlay block/grass_block_side_overlay
+blocks/grass_side_snowed block/grass_block_snow
+blocks/grass_top block/grass_block_top
+blocks/gravel block/gravel
+blocks/hardened_clay block/terracotta
+blocks/hardened_clay_stained_black block/black_terracotta
+blocks/hardened_clay_stained_blue block/blue_terracotta
+blocks/hardened_clay_stained_brown block/brown_terracotta
+blocks/hardened_clay_stained_cyan block/cyan_terracotta
+blocks/hardened_clay_stained_gray block/gray_terracotta
+blocks/hardened_clay_stained_green block/green_terracotta
+blocks/hardened_clay_stained_light_blue block/light_blue_terracotta
+blocks/hardened_clay_stained_lime block/lime_terracotta
+blocks/hardened_clay_stained_magenta block/magenta_terracotta
+blocks/hardened_clay_stained_orange block/orange_terracotta
+blocks/hardened_clay_stained_pink block/pink_terracotta
+blocks/hardened_clay_stained_purple block/purple_terracotta
+blocks/hardened_clay_stained_red block/red_terracotta
+blocks/hardened_clay_stained_silver block/light_gray_terracotta
+blocks/hardened_clay_stained_white block/white_terracotta
+blocks/hardened_clay_stained_yellow block/yellow_terracotta
+blocks/hay_block_side block/hay_block_side
+blocks/hay_block_top block/hay_block_top
+blocks/hopper_inside block/hopper_inside
+blocks/hopper_outside block/hopper_outside
+blocks/hopper_top block/hopper_top
+blocks/ice block/ice
+blocks/iron_bars block/iron_bars
+blocks/iron_block block/iron_block
+blocks/iron_ore block/iron_ore
+blocks/jukebox_side block/jukebox_side
+blocks/jukebox_top block/jukebox_top
+blocks/ladder block/ladder
+blocks/lapis_block block/lapis_block
+blocks/lapis_ore block/lapis_ore
+blocks/leaves_acacia block/acacia_leaves
+blocks/leaves_big_oak block/dark_oak_leaves
+blocks/leaves_birch block/birch_leaves
+blocks/leaves_jungle block/jungle_leaves
+blocks/leaves_oak block/oak_leaves
+blocks/leaves_spruce block/spruce_leaves
+blocks/lever block/lever
+blocks/log_acacia block/acacia_log
+blocks/log_acacia_top block/acacia_log_top
+blocks/log_big_oak block/dark_oak_log
+blocks/log_big_oak_top block/dark_oak_log_top
+blocks/log_birch block/birch_log
+blocks/log_birch_top block/birch_log_top
+blocks/log_jungle block/jungle_log
+blocks/log_jungle_top block/jungle_log_top
+blocks/log_oak block/oak_log
+blocks/log_oak_top block/oak_log_top
+blocks/log_spruce block/spruce_log
+blocks/log_spruce_top block/spruce_log_top
+blocks/melon_side block/melon_side
+blocks/melon_stem_disconnected block/melon_stem
+blocks/melon_top block/melon_top
+blocks/mob_spawner block/spawner
+blocks/mushroom_block_inside block/mushroom_block_inside
+blocks/mushroom_brown block/brown_mushroom
+blocks/mushroom_red block/red_mushroom
+blocks/mycelium_side block/mycelium_side
+blocks/mycelium_top block/mycelium_top
+blocks/nether_brick block/nether_bricks
+blocks/netherrack block/netherrack
+blocks/noteblock block/note_block
+blocks/obsidian block/obsidian
+blocks/piston_bottom block/piston_bottom
+blocks/piston_inner block/piston_inner
+blocks/piston_side block/piston_side
+blocks/piston_top_sticky block/piston_top_sticky
+blocks/planks_acacia block/acacia_planks
+blocks/planks_big_oak block/dark_oak_planks
+blocks/planks_birch block/birch_planks
+blocks/planks_jungle block/jungle_planks
+blocks/planks_oak block/oak_planks
+blocks/planks_spruce block/spruce_planks
+blocks/pumpkin_face_off block/carved_pumpkin
+blocks/pumpkin_face_on block/jack_o_lantern
+blocks/pumpkin_side block/pumpkin_side
+blocks/pumpkin_stem_disconnected block/pumpkin_stem
+blocks/pumpkin_top block/pumpkin_top
+blocks/quartz_block_bottom block/quartz_block_bottom
+blocks/quartz_block_chiseled block/chiseled_quartz_block
+blocks/quartz_block_lines block/quartz_pillar
+blocks/quartz_block_side block/quartz_block_side
+blocks/quartz_block_top block/quartz_block_top
+blocks/rail_activator block/activator_rail
+blocks/rail_detector block/detector_rail
+blocks/rail_golden block/powered_rail
+blocks/rail_golden_powered block/powered_rail_on
+blocks/rail_normal block/rail
+blocks/rail_normal_turned block/rail_corner
+blocks/red_sand block/red_sand
+blocks/redstone_block block/redstone_block
+blocks/redstone_lamp_on block/redstone_lamp_on
+blocks/redstone_ore block/redstone_ore
+blocks/redstone_torch_off block/redstone_torch_off
+blocks/redstone_torch_on block/redstone_torch
+blocks/reeds block/sugar_cane
+blocks/repeater_off block/repeater
+blocks/repeater_on block/repeater_on
+blocks/sand block/sand
+blocks/sandstone_bottom block/sandstone_bottom
+blocks/sandstone_carved block/chiseled_sandstone
+blocks/sandstone_normal block/sandstone
+blocks/sandstone_smooth block/cut_sandstone
+blocks/sandstone_top block/sandstone_top
+blocks/sapling_acacia block/acacia_sapling
+blocks/sapling_birch block/birch_sapling
+blocks/sapling_jungle block/jungle_sapling
+blocks/sapling_oak block/oak_sapling
+blocks/sapling_spruce block/spruce_sapling
+blocks/snow block/snow
+blocks/soul_sand block/soul_sand
+blocks/sponge block/sponge
+blocks/stone block/stone
+blocks/stone_slab_side block/smooth_stone_slab_side
+blocks/stone_slab_top block/smooth_stone
+blocks/stonebrick block/stone_bricks
+blocks/stonebrick_carved block/chiseled_stone_bricks
+blocks/stonebrick_cracked block/cracked_stone_bricks
+blocks/stonebrick_mossy block/mossy_stone_bricks
+blocks/tallgrass block/grass
+blocks/tnt_bottom block/tnt_bottom
+blocks/tnt_side block/tnt_side
+blocks/tnt_top block/tnt_top
+blocks/torch_on block/torch
+blocks/trapdoor block/oak_trapdoor
+blocks/vine block/vine
+blocks/waterlily block/lily_pad
+blocks/web block/cobweb
+blocks/wheat_stage_0 block/wheat_stage0
+blocks/wheat_stage_1 block/wheat_stage1
+blocks/wheat_stage_2 block/wheat_stage2
+blocks/wheat_stage_3 block/wheat_stage3
+blocks/wheat_stage_4 block/wheat_stage4
+blocks/wheat_stage_5 block/wheat_stage5
+blocks/wheat_stage_6 block/wheat_stage6
+blocks/wheat_stage_7 block/wheat_stage7
+blocks/wool_colored_black block/black_wool
+blocks/wool_colored_blue block/blue_wool
+blocks/wool_colored_brown block/brown_wool
+blocks/wool_colored_cyan block/cyan_wool
+blocks/wool_colored_gray block/gray_wool
+blocks/wool_colored_green block/green_wool
+blocks/wool_colored_light_blue block/light_blue_wool
+blocks/wool_colored_lime block/lime_wool
+blocks/wool_colored_magenta block/magenta_wool
+blocks/wool_colored_orange block/orange_wool
+blocks/wool_colored_pink block/pink_wool
+blocks/wool_colored_purple block/purple_wool
+blocks/wool_colored_red block/red_wool
+blocks/wool_colored_silver block/light_gray_wool
+blocks/wool_colored_white block/white_wool
+blocks/wool_colored_yellow block/yellow_wool
+items/apple item/apple
+items/apple_golden item/golden_apple
+items/arrow item/arrow
+items/beef_cooked item/cooked_beef
+items/beef_raw item/beef
+items/blaze_powder item/blaze_powder
+items/blaze_rod item/blaze_rod
+items/boat item/oak_boat
+items/bone item/bone
+items/book_normal item/book
+items/book_writable item/writable_book
+items/book_written item/written_book
+items/bow_pulling_0 item/bow_pulling_0
+items/bow_pulling_1 item/bow_pulling_1
+items/bow_pulling_2 item/bow_pulling_2
+items/bow_standby item/bow
+items/bowl item/bowl
+items/bread item/bread
+items/brewing_stand item/brewing_stand
+items/brick item/brick
+items/bucket_empty item/bucket
+items/bucket_lava item/lava_bucket
+items/bucket_milk item/milk_bucket
+items/bucket_water item/water_bucket
+items/cake item/cake
+items/carrot item/carrot
+items/carrot_golden item/golden_carrot
+items/carrot_on_a_stick item/carrot_on_a_stick
+items/cauldron item/cauldron
+items/chainmail_boots item/chainmail_boots
+items/chainmail_chestplate item/chainmail_chestplate
+items/chainmail_helmet item/chainmail_helmet
+items/chainmail_leggings item/chainmail_leggings
+items/charcoal item/charcoal
+items/chicken_cooked item/cooked_chicken
+items/chicken_raw item/chicken
+items/clay_ball item/clay_ball
+items/coal item/coal
+items/comparator item/comparator
+items/cookie item/cookie
+items/diamond item/diamond
+items/diamond_axe item/diamond_axe
+items/diamond_boots item/diamond_boots
+items/diamond_chestplate item/diamond_chestplate
+items/diamond_helmet item/diamond_helmet
+items/diamond_hoe item/diamond_hoe
+items/diamond_horse_armor item/diamond_horse_armor
+items/diamond_leggings item/diamond_leggings
+items/diamond_pickaxe item/diamond_pickaxe
+items/diamond_shovel item/diamond_shovel
+items/diamond_sword item/diamond_sword
+items/door_iron item/iron_door
+items/door_wood item/oak_door
+items/dye_powder_black item/ink_sac
+items/dye_powder_blue item/lapis_lazuli
+items/dye_powder_brown item/cocoa_beans
+items/dye_powder_white item/bone_meal
+items/egg item/egg
+items/emerald item/emerald
+items/empty_armor_slot_boots item/empty_armor_slot_boots
+items/empty_armor_slot_chestplate item/empty_armor_slot_chestplate
+items/empty_armor_slot_helmet item/empty_armor_slot_helmet
+items/empty_armor_slot_leggings item/empty_armor_slot_leggings
+items/ender_eye item/ender_eye
+items/ender_pearl item/ender_pearl
+items/experience_bottle item/experience_bottle
+items/feather item/feather
+items/fireball item/fire_charge
+items/fish_cod_cooked item/cooked_cod
+items/fish_cod_raw item/cod
+items/fish_salmon_cooked item/cooked_salmon
+items/fish_salmon_raw item/salmon
+items/fishing_rod_cast item/fishing_rod_cast
+items/fishing_rod_uncast item/fishing_rod
+items/flint item/flint
+items/flint_and_steel item/flint_and_steel
+items/flower_pot item/flower_pot
+items/ghast_tear item/ghast_tear
+items/glowstone_dust item/glowstone_dust
+items/gold_axe item/golden_axe
+items/gold_boots item/golden_boots
+items/gold_chestplate item/golden_chestplate
+items/gold_helmet item/golden_helmet
+items/gold_hoe item/golden_hoe
+items/gold_horse_armor item/golden_horse_armor
+items/gold_ingot item/gold_ingot
+items/gold_leggings item/golden_leggings
+items/gold_nugget item/gold_nugget
+items/gold_pickaxe item/golden_pickaxe
+items/gold_shovel item/golden_shovel
+items/gold_sword item/golden_sword
+items/gunpowder item/gunpowder
+items/hopper item/hopper
+items/iron_axe item/iron_axe
+items/iron_boots item/iron_boots
+items/iron_chestplate item/iron_chestplate
+items/iron_helmet item/iron_helmet
+items/iron_hoe item/iron_hoe
+items/iron_horse_armor item/iron_horse_armor
+items/iron_ingot item/iron_ingot
+items/iron_leggings item/iron_leggings
+items/iron_pickaxe item/iron_pickaxe
+items/iron_shovel item/iron_shovel
+items/iron_sword item/iron_sword
+items/item_frame item/item_frame
+items/lead item/lead
+items/leather item/leather
+items/leather_boots item/leather_boots
+items/leather_boots_overlay item/leather_boots_overlay
+items/leather_chestplate item/leather_chestplate
+items/leather_chestplate_overlay item/leather_chestplate_overlay
+items/leather_helmet item/leather_helmet
+items/leather_helmet_overlay item/leather_helmet_overlay
+items/leather_leggings item/leather_leggings
+items/leather_leggings_overlay item/leather_leggings_overlay
+items/magma_cream item/magma_cream
+items/map_empty item/map
+items/melon item/melon_slice
+items/minecart_chest item/chest_minecart
+items/minecart_furnace item/furnace_minecart
+items/minecart_hopper item/hopper_minecart
+items/minecart_normal item/minecart
+items/minecart_tnt item/tnt_minecart
+items/mushroom_stew item/mushroom_stew
+items/name_tag item/name_tag
+items/nether_star item/nether_star
+items/nether_wart item/nether_wart
+items/netherbrick item/nether_brick
+items/painting item/painting
+items/paper item/paper
+items/porkchop_cooked item/cooked_porkchop
+items/porkchop_raw item/porkchop
+items/potato item/potato
+items/potato_baked item/baked_potato
+items/potato_poisonous item/poisonous_potato
+items/potion_overlay item/potion_overlay
+items/pumpkin_pie item/pumpkin_pie
+items/quartz item/quartz
+items/record_11 item/music_disc_11
+items/record_13 item/music_disc_13
+items/record_blocks item/music_disc_blocks
+items/record_cat item/music_disc_cat
+items/record_chirp item/music_disc_chirp
+items/record_far item/music_disc_far
+items/record_mall item/music_disc_mall
+items/record_mellohi item/music_disc_mellohi
+items/record_stal item/music_disc_stal
+items/record_strad item/music_disc_strad
+items/record_wait item/music_disc_wait
+items/record_ward item/music_disc_ward
+items/redstone_dust item/redstone
+items/reeds item/sugar_cane
+items/repeater item/repeater
+items/rotten_flesh item/rotten_flesh
+items/saddle item/saddle
+items/seeds_melon item/melon_seeds
+items/seeds_pumpkin item/pumpkin_seeds
+items/seeds_wheat item/wheat_seeds
+items/shears item/shears
+items/sign item/oak_sign
+items/slimeball item/slime_ball
+items/snowball item/snowball
+items/spawn_egg item/spawn_egg
+items/spawn_egg_overlay item/spawn_egg_overlay
+items/spider_eye item/spider_eye
+items/stick item/stick
+items/stone_axe item/stone_axe
+items/stone_hoe item/stone_hoe
+items/stone_pickaxe item/stone_pickaxe
+items/stone_shovel item/stone_shovel
+items/stone_sword item/stone_sword
+items/string item/string
+items/sugar item/sugar
+items/wheat item/wheat
+items/wood_axe item/wooden_axe
+items/wood_hoe item/wooden_hoe
+items/wood_pickaxe item/wooden_pickaxe
+items/wood_shovel item/wooden_shovel
+items/wood_sword item/wooden_sword
+beta 0 block/grass_block_top
+beta 1 block/stone
+beta 2 block/dirt
+beta 3 block/grass_block_side
+beta 4 block/oak_planks
+beta 5 block/smooth_stone_slab_side
+beta 6 block/smooth_stone
+beta 7 block/bricks
+beta 8 block/tnt_side
+beta 9 block/tnt_top
+beta 10 block/tnt_bottom
+beta 11 block/cobweb
+beta 12 block/poppy
+beta 13 block/dandelion
+beta 15 block/oak_sapling
+beta 16 block/cobblestone
+beta 17 block/bedrock
+beta 18 block/sand
+beta 19 block/gravel
+beta 20 block/oak_log
+beta 21 block/oak_log_top
+beta 22 block/iron_block
+beta 23 block/gold_block
+beta 24 block/diamond_block
+beta 28 block/red_mushroom
+beta 29 block/brown_mushroom
+beta 32 block/gold_ore
+beta 33 block/iron_ore
+beta 34 block/coal_ore
+beta 35 block/bookshelf
+beta 36 block/mossy_cobblestone
+beta 37 block/obsidian
+beta 38 block/grass_block_side_overlay
+beta 39 block/grass
+beta 43 block/crafting_table_top
+beta 44 block/furnace_front
+beta 45 block/furnace_side
+beta 46 block/dispenser_front
+beta 48 block/sponge
+beta 49 block/glass
+beta 50 block/diamond_ore
+beta 51 block/redstone_ore
+beta 52 block/oak_leaves
+beta 54 block/stone_bricks
+beta 55 block/dead_bush
+beta 56 block/fern
+beta 59 block/crafting_table_side
+beta 60 block/crafting_table_front
+beta 61 block/furnace_front_on
+beta 62 block/furnace_top
+beta 63 block/spruce_sapling
+beta 64 block/white_wool
+beta 65 block/spawner
+beta 66 block/snow
+beta 67 block/ice
+beta 68 block/grass_block_snow
+beta 69 block/cactus_top
+beta 70 block/cactus_side
+beta 71 block/cactus_bottom
+beta 72 block/clay
+beta 73 block/sugar_cane
+beta 74 block/jukebox_side
+beta 75 block/jukebox_top
+beta 79 block/birch_sapling
+beta 80 block/torch
+beta 81 block/oak_door_top
+beta 82 block/iron_door_top
+beta 83 block/ladder
+beta 84 block/oak_trapdoor
+beta 86 block/farmland_moist
+beta 87 block/farmland
+beta 88 block/wheat_stage0
+beta 89 block/wheat_stage1
+beta 90 block/wheat_stage2
+beta 91 block/wheat_stage3
+beta 92 block/wheat_stage4
+beta 93 block/wheat_stage5
+beta 94 block/wheat_stage6
+beta 95 block/wheat_stage7
+beta 96 block/lever
+beta 97 block/oak_door_bottom
+beta 98 block/iron_door_bottom
+beta 99 block/redstone_torch
+beta 100 block/mossy_stone_bricks
+beta 101 block/cracked_stone_bricks
+beta 102 block/pumpkin_top
+beta 103 block/netherrack
+beta 104 block/soul_sand
+beta 105 block/glowstone
+beta 112 block/rail_corner
+beta 113 block/black_wool
+beta 114 block/gray_wool
+beta 115 block/redstone_torch_off
+beta 116 block/spruce_log
+beta 117 block/birch_log
+beta 118 block/pumpkin_side
+beta 119 block/carved_pumpkin
+beta 120 block/jack_o_lantern
+beta 128 block/rail
+beta 129 block/red_wool
+beta 130 block/pink_wool
+beta 132 block/spruce_leaves
+beta 136 block/melon_side
+beta 137 block/melon_top
+beta 144 block/lapis_block
+beta 145 block/green_wool
+beta 146 block/lime_wool
+beta 160 block/lapis_ore
+beta 161 block/brown_wool
+beta 162 block/yellow_wool
+beta 176 block/sandstone_top
+beta 177 block/blue_wool
+beta 178 block/light_blue_wool
+beta 192 block/sandstone
+beta 193 block/purple_wool
+beta 194 block/magenta_wool
+beta 208 block/sandstone_bottom
+beta 209 block/cyan_wool
+beta 210 block/orange_wool
+beta 225 block/light_gray_wool
