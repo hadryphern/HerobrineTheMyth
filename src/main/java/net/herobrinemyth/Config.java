@@ -35,6 +35,7 @@ public final class Config {
     public static final ForgeConfigSpec.IntValue FIRE_START_DAY;
     public static final ForgeConfigSpec.IntValue CHUNK_DELETION_START_DAY;
     public static final ForgeConfigSpec.BooleanValue CHUNK_DELETION;
+    public static final ForgeConfigSpec.BooleanValue KICKS, BLOOD_MOON, SHARED_EVENTS, PUNISH_BREAKING, RANDOM_DAMAGE, BURN_VILLAGES;
 
     // totem
     public static final ForgeConfigSpec.BooleanValue TOTEM_ENABLED;
@@ -42,6 +43,7 @@ public final class Config {
     public static final ForgeConfigSpec.IntValue MAX_SWARM;
     public static final ForgeConfigSpec.BooleanValue ETERNAL_NIGHT;
     public static final ForgeConfigSpec.EnumValue<CrashMode> CRASH_MODE;
+    public static final ForgeConfigSpec.BooleanValue TOTEM_BOSSES;
     public static final ForgeConfigSpec.IntValue CRASH_AFTER_MINUTES;
     public static final ForgeConfigSpec.EnumValue<DeletionMode> DELETION_MODE;
     public static final ForgeConfigSpec.IntValue DELETION_AFTER_MINUTES;
@@ -55,6 +57,7 @@ public final class Config {
     public static final ForgeConfigSpec.BooleanValue REVERB;
     public static final ForgeConfigSpec.BooleanValue QUIET_SCREAMS;
     public static final ForgeConfigSpec.BooleanValue OVERCAST;
+    public static final ForgeConfigSpec.BooleanValue ALWAYS_BLOOD_RAIN;
     public static final ForgeConfigSpec.BooleanValue GLOWING_EYES;
     public static final ForgeConfigSpec.BooleanValue OLD_TEXTURES;
     public static final ForgeConfigSpec.BooleanValue CLASSIC_PACK;
@@ -86,10 +89,10 @@ public final class Config {
         DAY_SCALE = b.comment("Stretches the whole progression. 2.0 = everything unlocks twice as late (good for 100 days).",
                         "0.5 = twice as fast.")
                 .defineInRange("dayScale", 1.0, 0.05, 20.0);
-        MAX_MINOR_PER_DAY = b.comment("Upper limit of small events (sounds, signs, little things) per day.")
-                .defineInRange("maxMinorPerDay", 12, 0, 500);
-        MAX_MAJOR_PER_DAY = b.comment("Upper limit of big events (sightings, chases, attacks) per day.")
-                .defineInRange("maxMajorPerDay", 5, 0, 200);
+        MAX_MINOR_PER_DAY = b.comment("Upper limit of small events (sounds, signs, little things) per Minecraft day.")
+                .defineInRange("minorEventsPerDayLimit", 40, 0, 500);
+        MAX_MAJOR_PER_DAY = b.comment("Upper limit of big events (sightings, chases, attacks) per Minecraft day.")
+                .defineInRange("majorEventsPerDayLimit", 12, 0, 200);
         b.pop();
 
         b.comment("What he is allowed to do to you and your world.").push("permissions");
@@ -108,13 +111,25 @@ public final class Config {
         ALLOW_BLOCK_SCARE = b.comment("Wait behind the block you mine.")
                 .define("allowBlockScare", true);
         CORRUPTION_START_DAY = b.comment("Day the world starts to rot slowly (netherrack, dead plants). 0 = only after the totem.")
-                .defineInRange("corruptionStartDay", 15, 0, 100000);
+                .defineInRange("corruptionStartDay", 12, 0, 100000);
         FIRE_START_DAY = b.comment("Day he starts burning things. 0 = only after the totem.")
-                .defineInRange("fireStartDay", 20, 0, 100000);
+                .defineInRange("fireStartDay", 10, 0, 100000);
         CHUNK_DELETION_START_DAY = b.comment("Day he starts eating whole chunks, slowly. 0 = only after the totem.")
-                .defineInRange("chunkDeletionStartDay", 28, 0, 100000);
+                .defineInRange("chunkDeletionStartDay", 20, 0, 100000);
         CHUNK_DELETION = b.comment("Master switch for chunk eating.")
                 .define("chunkDeletion", true);
+        BURN_VILLAGES = b.comment("He burns forests and villages (from fireStartDay).")
+                .define("burnVillages", true);
+        KICKS = b.comment("Before the totem: sometimes he throws you out to the title screen ('Banned by Herobrine'). The world is saved.")
+                .define("herobrineKicks", true);
+        BLOOD_MOON = b.comment("Some nights are a blood moon: one night of total chaos. Never deletes or fully corrupts the world.")
+                .define("bloodMoon", true);
+        SHARED_EVENTS = b.comment("Multiplayer: some of his messages, sounds, sightings and jumpscares reach everyone, not only his target.")
+                .define("sharedEvents", true);
+        PUNISH_BREAKING = b.comment("Breaking a block of one of his structures is punished (lightning, him, lava, silverfish, a cave...).")
+                .define("punishStructureBreaking", true);
+        RANDOM_DAMAGE = b.comment("Small damage from nobody, now and then.")
+                .define("randomDamage", true);
         b.pop();
 
         b.comment("Gold 3x3, mossy cobblestone, 4 redstone torches, netherrack, fire. Everything at once, one after another.").push("totem");
@@ -127,6 +142,8 @@ public final class Config {
                 .define("eternalNight", true);
         CRASH_MODE = b.comment("OFF, CRASH_SCREEN (saves, fake crash screen), CLOSE_GAME (saves, fake crash, closes Minecraft).")
                 .defineEnum("crashMode", CrashMode.CLOSE_GAME);
+        TOTEM_BOSSES = b.comment("After the totem he may summon the Wither, the Warden and the Ender Dragon.")
+                .define("totemBosses", true);
         CRASH_AFTER_MINUTES = b.defineInRange("crashAfterMinutes", 12, 0, 100000);
         DELETION_MODE = b.comment("The end. Singleplayer only.",
                         "OFF = never. HIDE = the world moves to .minecraft/herobrine_took_your_worlds (recoverable).",
@@ -140,8 +157,8 @@ public final class Config {
                 .defineInRange("hostileSpawnRate", 0.08, 0.0, 1.0);
         PASSIVE_SPAWNS = b.comment("Fraction of natural animal spawns that still happen (1.0 = vanilla).")
                 .defineInRange("passiveSpawnRate", 0.2, 0.0, 1.0);
-        NIGHT_ACTIVITY = b.comment("How much more active he is at night than during the day.")
-                .defineInRange("nightActivity", 3.0, 1.0, 20.0);
+        NIGHT_ACTIVITY = b.comment("How much stronger he is at night: events happen this many times more often after dark.")
+                .defineInRange("nightStrength", 1.7, 1.0, 20.0);
         b.pop();
 
         b.comment("Client side: how the world feels.").push("atmosphere");
@@ -157,6 +174,8 @@ public final class Config {
                 .define("quietScreams", true);
         OVERCAST = b.comment("The sky is always grey and overcast. No sun, no stars.")
                 .define("overcastSky", true);
+        ALWAYS_BLOOD_RAIN = b.comment("Every rain falls red, not only his blood rain.")
+                .define("alwaysBloodRain", true);
         GLOWING_EYES = b.comment("His eyes glow. Off by default: you only see a shape in the dark.")
                 .define("glowingEyes", false);
         OLD_TEXTURES = b.comment("Turn on Minecraft's built-in classic textures (Programmer Art).")

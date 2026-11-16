@@ -87,7 +87,21 @@ public final class Builder {
     }
 
     public static void set(ServerLevel level, BlockPos pos, BlockState state) {
-        if (level.hasChunkAt(pos) && replaceable(level, pos)) level.setBlock(pos, state, FLAGS);
+        if (level.hasChunkAt(pos) && replaceable(level, pos)) {
+            put(level, pos, state, FLAGS);
+            if (!state.isAir()) mark(level, pos);
+        }
+    }
+
+    /** Places a block and remembers it as his. */
+    public static void put(ServerLevel level, BlockPos pos, BlockState state, int flags) {
+        level.setBlock(pos, state, flags);
+        mark(level, pos);
+    }
+
+    /** One of his blocks: breaking it has consequences. */
+    public static void mark(ServerLevel level, BlockPos pos) {
+        if (level.dimension() == net.minecraft.world.level.Level.OVERWORLD) HauntData.get(level.getServer()).mark(pos);
     }
 
     @Nullable
@@ -103,7 +117,7 @@ public final class Builder {
         float yaw = Spots.yawTo(faceTowards, Vec3.atCenterOf(pos));
         BlockState sign = Blocks.DARK_OAK_SIGN.defaultBlockState()
                 .setValue(StandingSignBlock.ROTATION, RotationSegment.convertToSegment(yaw + 180F));
-        level.setBlock(pos, sign, Block.UPDATE_ALL);
+        put(level, pos, sign, Block.UPDATE_ALL);
         BlockEntity be = level.getBlockEntity(pos);
         if (be instanceof SignBlockEntity s) {
             SignText text = new SignText().setColor(DyeColor.RED).setHasGlowingText(true);
@@ -189,7 +203,7 @@ public final class Builder {
             }
             BlockPos floor = s.relative(dir, i);
             if (Fear.RNG.nextInt(10) < 2 && level.getBlockState(floor).isAir() && Spots.solidFloor(level, floor.below()))
-                level.setBlock(floor, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
+                put(level, floor, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
         }
         return carved > 10;
     }
@@ -227,7 +241,7 @@ public final class Builder {
                 Component.literal(p.getGameProfile().getName()),
                 Component.translatable("herobrine.sign.grave"),
                 Component.literal("-H"));
-        level.setBlock(c.above(), Blocks.SKELETON_SKULL.defaultBlockState()
+        put(level, c.above(), Blocks.SKELETON_SKULL.defaultBlockState()
                 .setValue(net.minecraft.world.level.block.SkullBlock.ROTATION, RotationSegment.convertToSegment(Spots.yawTo(p.position(), Vec3.atCenterOf(c)) + 180F)), FLAGS);
         return true;
     }
@@ -259,7 +273,7 @@ public final class Builder {
             if (v == null) continue;
             BlockPos pos = BlockPos.containing(v);
             if (level.getBlockState(pos).isAir()) {
-                level.setBlock(pos, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
+                put(level, pos, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
                 placed++;
             }
         }
@@ -317,14 +331,14 @@ public final class Builder {
                 }
             }
         }
-        level.setBlock(c, Blocks.SPAWNER.defaultBlockState(), Block.UPDATE_ALL);
+        put(level, c, Blocks.SPAWNER.defaultBlockState(), Block.UPDATE_ALL);
         if (level.getBlockEntity(c) instanceof SpawnerBlockEntity sp) {
             EntityType<?>[] types = {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CAVE_SPIDER};
             sp.setEntityId(types[Fear.RNG.nextInt(types.length)], Fear.RNG);
             sp.setChanged();
         }
         BlockPos chest = c.offset(2, 0, 2);
-        level.setBlock(chest, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
+        put(level, chest, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
         if (level.getBlockEntity(chest) instanceof ChestBlockEntity ch) {
             ch.setItem(13, Msg.book(p));
             ch.setItem(4, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.REDSTONE_TORCH, 4));
@@ -371,7 +385,7 @@ public final class Builder {
             BlockPos at = new BlockPos(x0 + x, y0 + 1 + r.nextInt(H), z0 + z);
             Direction toWall = side == 0 ? Direction.EAST : side == 1 ? Direction.WEST : side == 2 ? Direction.SOUTH : Direction.NORTH;
             if (level.getBlockState(at).isAir())
-                level.setBlock(at, Blocks.VINE.defaultBlockState().setValue(net.minecraft.world.level.block.VineBlock.getPropertyForFace(toWall), true), FLAGS);
+                put(level, at, Blocks.VINE.defaultBlockState().setValue(net.minecraft.world.level.block.VineBlock.getPropertyForFace(toWall), true), FLAGS);
         }
         // redstone torches on the roof corners and inside
         set(level, new BlockPos(x0 + 2, y0 + H + 2, z0 + 2), Blocks.REDSTONE_TORCH.defaultBlockState());
@@ -383,7 +397,7 @@ public final class Builder {
         // the altar and the chest
         BlockPos chest = new BlockPos(x0 + 5, y0 + 1, z0 + 2);
         set(level, chest.below(), Blocks.MOSSY_COBBLESTONE.defaultBlockState());
-        level.setBlock(chest, Blocks.CHEST.defaultBlockState().setValue(net.minecraft.world.level.block.ChestBlock.FACING, Direction.SOUTH), Block.UPDATE_ALL);
+        put(level, chest, Blocks.CHEST.defaultBlockState().setValue(net.minecraft.world.level.block.ChestBlock.FACING, Direction.SOUTH), Block.UPDATE_ALL);
         if (level.getBlockEntity(chest) instanceof ChestBlockEntity ch) {
             ch.setItem(13, Artifacts.random());
             if (r.nextInt(3) == 0) ch.setItem(4, Msg.classicBook(p));

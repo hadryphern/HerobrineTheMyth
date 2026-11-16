@@ -38,6 +38,8 @@ public final class Fx {
     public static final int MOOD = 16;
     /** Around x/y/z, for `duration` ticks and `intensity` blocks, the game's own sounds play at full volume (he caused them). */
     public static final int UNMUTE = 17;
+    /** Thrown out to the title screen with one of his messages (intensity = which message). The world is saved. */
+    public static final int KICK = 18;
 
     private Fx() {}
 }

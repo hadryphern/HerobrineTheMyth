@@ -96,6 +96,8 @@ public class HerobrineEntity extends Monster {
 
     @Nullable
     private UUID targetId;
+    /** Rarely, everyone can see him, not only the one he is haunting. */
+    public boolean shared;
     private int life;
     private int maxLife = 20 * 30;
     private int lookedTicks;
@@ -151,6 +153,7 @@ public class HerobrineEntity extends Monster {
             default -> 6 + h.random.nextInt(30);
         };
         if (mode == Mode.SCARE || mode == Mode.GUIDE) h.setNoGravity(true);
+        if (mode != Mode.LURE && mode != Mode.SCARE && Fear.shared(0.1)) h.shared = true;
         if (mode == Mode.GHOST || mode == Mode.THIEF || mode == Mode.GUIDE || mode == Mode.WANDER || h.random.nextInt(5) == 0) {
             // the classic Herobrine held a redstone torch
             h.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.REDSTONE_TORCH));
@@ -292,7 +295,7 @@ public class HerobrineEntity extends Monster {
         switch (mode) {
             case STALK, WATCH -> {
                 if (lookedTicks >= lookLimit) vanish(false);
-                else if (dist < 9 && mode == Mode.STALK) vanish(false);
+                else if (dist < 5 && mode == Mode.STALK) vanish(false);
                 else if (dist < 3) vanish(false);
             }
             case CLONE -> {
@@ -419,6 +422,16 @@ public class HerobrineEntity extends Monster {
         this.yBodyRot = getYRot();
         this.setYHeadRot(Mth.approachDegrees(getYHeadRot(), want, 4F));
         this.setXRot(Spots.pitchTo(getEyePosition(), t.getEyePosition()));
+        // small steps towards you. more of them when you are not looking. he stops at arm's length.
+        double dist = distanceTo(t);
+        boolean looked = Spots.isLookingAt(t, this, 0.9);
+        if (dist > 2.6 && life > 60 && life % (looked ? 50 : 25) == 0 && random.nextInt(looked ? 3 : 2) == 0) {
+            Vec3 dir = t.position().subtract(position());
+            dir = new Vec3(dir.x, 0, dir.z).normalize().scale(looked ? 0.22 : 0.45);
+            Vec3 next = position().add(dir);
+            BlockPos stand = Spots.standable((ServerLevel) level(), Mth.floor(next.x), getBlockY(), Mth.floor(next.z), 1);
+            if (stand != null) this.teleportTo(next.x, stand.getY(), next.z);
+        }
         if (life % 20 == 0 && random.nextInt(18) == 0) {
             String[] s = {"entity.villager.ambient", "entity.zombie_villager.ambient", "ambient.cave", "entity.villager.no", "block.portal.ambient"};
             Fear.soundReverb(t, s[random.nextInt(s.length)], getEyePosition(), 0.6F, 0.5F);
@@ -688,7 +701,7 @@ public class HerobrineEntity extends Monster {
     /** Only the player he is haunting can see him. Your friends see nothing. */
     @Override
     public boolean broadcastToPlayer(ServerPlayer player) {
-        return targetId == null || targetId.equals(player.getUUID());
+        return shared || targetId == null || targetId.equals(player.getUUID());
     }
 
     /** He is gone. Was he ever there? */

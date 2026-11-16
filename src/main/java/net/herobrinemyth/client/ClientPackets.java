@@ -48,6 +48,7 @@ public final class ClientPackets {
             case Fx.UNMUTE -> ClientHorror.unmute(m.x(), m.y(), m.z(), k, d);
             case Fx.CLEAR -> ClientHorror.clear();
             case Fx.CRASH -> ClientHorror.crashPending = true;
+            case Fx.KICK -> ClientHorror.kickPending = (int) k;
             case Fx.DELETE_WORLD -> ClientHorror.takePending = true;
             default -> {
             }

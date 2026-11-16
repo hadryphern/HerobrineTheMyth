@@ -87,6 +87,10 @@ public final class HerobrineCommand {
                                 Fear.chat(p, Component.literal(StringArgumentType.getString(c, "message")));
                             return 1;
                         })))
+                .then(Commands.literal("bloodmoon").executes(c -> {
+                    Director.startBloodMoon(c.getSource().getServer());
+                    return 1;
+                }))
                 .then(Commands.literal("status").executes(HerobrineCommand::status)));
     }
 

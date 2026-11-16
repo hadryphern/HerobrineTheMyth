@@ -37,7 +37,7 @@ public final class Sky {
                                          float skyLight, int pixelX, int pixelY, org.joml.Vector3f colors) {
             if (Config.OVERCAST.get()) {
                 float sky = pixelY / 15F, block = pixelX / 15F;
-                float k = 1F - 0.28F * sky * (1F - block) * (1F - skyDarken);
+                float k = 1F - 0.45F * sky * (1F - block) * (1F - skyDarken);
                 colors.mul(k);
             }
             if (Config.OLD_LIGHTING.get()) {
@@ -50,14 +50,14 @@ public final class Sky {
         @Override
         public boolean renderSnowAndRain(ClientLevel level, int ticks, float partialTick, LightTexture light,
                                          double camX, double camY, double camZ) {
-            if (ClientHorror.blood > 0) RenderSystem.setShaderColor(0.75F, 0.02F, 0.02F, 1.0F);
+            if (bloody()) RenderSystem.setShaderColor(0.75F, 0.02F, 0.02F, 1.0F);
             return false;
         }
 
         /** In blood rain the drops that hit the ground are red too, not the blue water splashes. */
         @Override
         public boolean tickRain(ClientLevel level, int ticks, Camera camera) {
-            if (ClientHorror.blood <= 0) return false;
+            if (!bloody()) return false;
             float rain = level.getRainLevel(1F);
             if (rain <= 0F) return true;
             net.minecraft.util.RandomSource r = level.random;
@@ -84,6 +84,11 @@ public final class Sky {
         }
     }
 
+    /** Every rain is blood (by default), not only his blood rain. */
+    static boolean bloody() {
+        return ClientHorror.blood > 0 || Config.ALWAYS_BLOOD_RAIN.get();
+    }
+
     @SubscribeEvent
     public static void afterWeather(RenderLevelStageEvent event) {
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -96,7 +101,7 @@ public final class Sky {
         if (event.getCamera().getEntity().level().dimension() != net.minecraft.world.level.Level.OVERWORLD) return;
         float r = event.getRed(), g = event.getGreen(), b = event.getBlue();
         float lum = r * 0.3F + g * 0.59F + b * 0.11F;
-        float grey = lum * 0.62F;
+        float grey = lum * 0.45F;
         float k = 0.88F;
         event.setRed(r + (grey - r) * k);
         event.setGreen(g + (grey - g) * k);

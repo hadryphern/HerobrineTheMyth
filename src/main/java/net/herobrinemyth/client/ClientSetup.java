@@ -18,7 +18,8 @@ public final class ClientSetup {
     private static final EntityType<?>[] POSSESSABLE = {
             EntityType.ZOMBIE, EntityType.HUSK, EntityType.DROWNED, EntityType.SKELETON, EntityType.STRAY,
             EntityType.WITHER_SKELETON, EntityType.ZOMBIFIED_PIGLIN, EntityType.PIGLIN, EntityType.PIGLIN_BRUTE,
-            EntityType.VILLAGER, EntityType.ZOMBIE_VILLAGER, EntityType.PIG, EntityType.COW, EntityType.SHEEP
+            EntityType.VILLAGER, EntityType.ZOMBIE_VILLAGER, EntityType.PIG, EntityType.COW, EntityType.SHEEP,
+            EntityType.CHICKEN, EntityType.MOOSHROOM
     };
 
     @SubscribeEvent

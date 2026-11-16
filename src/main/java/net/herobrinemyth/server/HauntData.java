@@ -32,6 +32,29 @@ public class HauntData extends SavedData {
         setDirty();
     }
 
+    /** Every block of his structures (overworld only). Break one and he notices. */
+    private final java.util.LinkedHashSet<Long> marked = new java.util.LinkedHashSet<>();
+    /** The night (day index) of the current blood moon, or -1. */
+    public long bloodMoonNight = -1;
+
+    public void mark(BlockPos pos) {
+        if (marked.add(pos.asLong())) {
+            if (marked.size() > 30000) {
+                java.util.Iterator<Long> it = marked.iterator();
+                it.next();
+                it.remove();
+            }
+            setDirty();
+        }
+    }
+
+    /** True (and forgotten) if this block was one of his. */
+    public boolean unmark(BlockPos pos) {
+        if (!marked.remove(pos.asLong())) return false;
+        setDirty();
+        return true;
+    }
+
     public static final class PlayerState {
         // persisted
         public long playTicks;
@@ -53,6 +76,7 @@ public class HauntData extends SavedData {
         public long nextMinor, nextMajor, busyUntil;
         public long nextCorrupt, nextChunk, nextSwarm, nextNoise, nextCrash, nextDeletionCheck;
         public long lastBlockScare;
+        public long nextAmbient, lastPunish, lastGift;
         public boolean deletionStarted;
 
         CompoundTag save() {
@@ -121,6 +145,8 @@ public class HauntData extends SavedData {
             for (long l : cs.getLongArray(dim)) list.add(BlockPos.of(l));
             d.chests.put(dim, list);
         }
+        for (long l : tag.getLongArray("marked")) d.marked.add(l);
+        d.bloodMoonNight = tag.contains("bloodMoon") ? tag.getLong("bloodMoon") : -1;
         return d;
     }
 
@@ -134,6 +160,8 @@ public class HauntData extends SavedData {
         CompoundTag cs = new CompoundTag();
         chests.forEach((dim, list) -> cs.putLongArray(dim, list.stream().mapToLong(BlockPos::asLong).toArray()));
         tag.put("chests", cs);
+        tag.putLongArray("marked", marked.stream().mapToLong(Long::longValue).toArray());
+        tag.putLong("bloodMoon", bloodMoonNight);
         return tag;
     }
 }

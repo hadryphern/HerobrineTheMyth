@@ -68,11 +68,12 @@ public final class Stalking {
         net.minecraft.world.phys.BlockHitResult hit = l.clip(new net.minecraft.world.level.ClipContext(eye, eye.add(look.scale(96)),
                 net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, p));
         double dist = hit.getType() == net.minecraft.world.phys.HitResult.Type.MISS ? 96 : hit.getLocation().distanceTo(eye);
-        if (dist < 18) return false;
+        if (dist < 12) return false;
+        dist = Math.min(dist, 40);
         float yaw = p.getYRot();
         for (int i = 0; i < 24; i++) {
             float y = yaw + (Fear.RNG.nextFloat() - 0.5F) * 14F;
-            double d = 18 + Fear.RNG.nextDouble() * (dist - 20);
+            double d = 12 + Fear.RNG.nextDouble() * (dist - 13);
             Vec3 dir = Vec3.directionFromRotation(0, y);
             Vec3 c = eye.add(dir.scale(d));
             BlockPos s = Spots.standable(l, Mth.floor(c.x), Mth.floor(c.y) - 1, Mth.floor(c.z), 8);
@@ -86,7 +87,7 @@ public final class Stalking {
 
     /** Behind a tree, looking at you. When you look back he steps behind the trunk, and he is gone. */
     public static boolean tree(ServerPlayer p) {
-        Spots.TreeSpot t = Spots.findTreeSpot(p, 10, 34);
+        Spots.TreeSpot t = Spots.findTreeSpot(p, 8, 20);
         if (t == null) return false;
         HerobrineEntity h = HerobrineEntity.spawn(p, t.stand(), Mode.TREE, 20 * 90);
         if (h == null) return false;

@@ -228,8 +228,8 @@ public final class Classic {
             l.destroyBlock(b.north().below(dy), false);
         }
         p.teleportTo(l, b.getX() + 0.5, b.getY() - 3, b.getZ() + 0.5, p.getYRot(), p.getXRot());
-        l.setBlock(b.below(), Blocks.CRACKED_STONE_BRICKS.defaultBlockState(), Block.UPDATE_ALL);
-        l.setBlock(b.north().below(), Blocks.CRACKED_STONE_BRICKS.defaultBlockState(), Block.UPDATE_ALL);
+        Builder.put(l, b.below(), Blocks.CRACKED_STONE_BRICKS.defaultBlockState(), Block.UPDATE_ALL);
+        Builder.put(l, b.north().below(), Blocks.CRACKED_STONE_BRICKS.defaultBlockState(), Block.UPDATE_ALL);
         BlockPos sign = b.north(2);
         if (Spots.passable(l, sign)) {
             Builder.placeSign(l, sign, Vec3.atCenterOf(b), Component.empty(), Component.literal(p.getGameProfile().getName()),
@@ -270,7 +270,7 @@ public final class Classic {
         if (v == null) return false;
         BlockPos at = BlockPos.containing(v);
         if (!l.getBlockState(at).isAir()) return false;
-        l.setBlock(at, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
+        Builder.put(l, at, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
         smoke(l, Vec3.atBottomCenterOf(at));
         return true;
     }
@@ -414,14 +414,14 @@ public final class Classic {
         if (v == null) return false;
         BlockPos at = BlockPos.containing(v);
         if (!Spots.passable(l, at.above(2))) return false;
-        l.setBlock(at, Blocks.OAK_FENCE.defaultBlockState(), Block.UPDATE_ALL);
-        l.setBlock(at.above(), Blocks.OAK_FENCE.defaultBlockState(), Block.UPDATE_ALL);
+        Builder.put(l, at, Blocks.OAK_FENCE.defaultBlockState(), Block.UPDATE_ALL);
+        Builder.put(l, at.above(), Blocks.OAK_FENCE.defaultBlockState(), Block.UPDATE_ALL);
         placeHead(l, at.above(2), p.getGameProfile(), Spots.yawTo(Vec3.atCenterOf(at), p.position()));
         return true;
     }
 
     private static void placeHead(ServerLevel l, BlockPos at, GameProfile owner, float yaw) {
-        l.setBlock(at, Blocks.PLAYER_HEAD.defaultBlockState().setValue(SkullBlock.ROTATION, RotationSegment.convertToSegment(yaw)), Block.UPDATE_ALL);
+        Builder.put(l, at, Blocks.PLAYER_HEAD.defaultBlockState().setValue(SkullBlock.ROTATION, RotationSegment.convertToSegment(yaw)), Block.UPDATE_ALL);
         if (l.getBlockEntity(at) instanceof net.minecraft.world.level.block.entity.SkullBlockEntity skull) {
             skull.setOwner(owner);
             skull.setChanged();
@@ -440,11 +440,11 @@ public final class Classic {
         Vec3 v = Spots.findHidden(p, 4, 7, 0.3, 15, 20);
         if (v == null) return false;
         BlockPos at = BlockPos.containing(v);
-        l.setBlock(at, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.getNearest(p.getX() - at.getX(), 0, p.getZ() - at.getZ())), Block.UPDATE_ALL);
+        Builder.put(l, at, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.getNearest(p.getX() - at.getX(), 0, p.getZ() - at.getZ())), Block.UPDATE_ALL);
         if (l.getBlockEntity(at) instanceof ChestBlockEntity c) {
-            c.setItem(11, headOf(p));
-            c.setItem(13, Msg.book(p));
-            c.setItem(15, new ItemStack(Items.FLINT_AND_STEEL));
+            if (Fear.RNG.nextInt(3) == 0) c.setItem(11, headOf(p));
+            c.setItem(13, Fear.RNG.nextBoolean() ? Msg.book(p) : Msg.note(p));
+            if (Fear.RNG.nextInt(3) == 0) c.setItem(15, new ItemStack(Items.FLINT_AND_STEEL));
         }
         smoke(l, Vec3.atBottomCenterOf(at));
         return true;
@@ -505,7 +505,7 @@ public final class Classic {
                 if (Fear.RNG.nextInt(10) < 2) {
                     BlockPos t = new BlockPos(x, y, z);
                     if (l.getBlockState(t).isAir() && Spots.solidFloor(l, t.below()))
-                        l.setBlock(t, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
+                        Builder.put(l, t, Blocks.REDSTONE_TORCH.defaultBlockState(), Block.UPDATE_ALL);
                 }
             }
         }
@@ -526,9 +526,16 @@ public final class Classic {
             }
         }
         if (empty < 0) return;
-        int r = Fear.RNG.nextInt(100);
-        if (r < 3) chest.setItem(empty, headOf(p));
-        else if (r < 8) chest.setItem(empty, Msg.classicBook(p));
+        // not every time: at most once every 15 minutes, and mostly notes, rarely your head
+        HauntData.PlayerState st = data.player(p.getUUID());
+        long now = Scheduler.now();
+        if (st.lastGift != 0 && now - st.lastGift < 20 * 60 * 15) return;
+        if (Fear.RNG.nextInt(100) >= 6) return;
+        st.lastGift = now;
+        int r = Fear.RNG.nextInt(10);
+        if (r == 0) chest.setItem(empty, headOf(p));
+        else if (r < 3) chest.setItem(empty, Msg.classicBook(p));
+        else chest.setItem(empty, Msg.note(p));
         chest.setChanged();
     }
 

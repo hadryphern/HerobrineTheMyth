@@ -42,6 +42,16 @@ public final class Endings {
         mc.setScreen(new CrashScreen(report, mode == Config.CrashMode.CLOSE_GAME));
     }
 
+    /** He throws you out. Back to the title, with his message. The world is saved first. */
+    static void kick(int which) {
+        Minecraft mc = Minecraft.getInstance();
+        leaveWorld(mc);
+        mc.setScreen(new net.minecraft.client.gui.screens.DisconnectedScreen(new net.minecraft.client.gui.screens.TitleScreen(),
+                Component.translatable("herobrine.kick.title"),
+                Component.translatable("herobrine.kick." + which).withStyle(ChatFormatting.DARK_RED),
+                Component.translatable("gui.toTitle")));
+    }
+
     /** Herobrine takes the world. */
     static void takeWorld() {
         Config.DeletionMode mode = Config.DELETION_MODE.get();

@@ -18,6 +18,11 @@ public final class Msg {
     public static final int BOOK = 7;
     public static final int FIGHT = 6;
     public static final int TOTEM_CHAT = 18;
+    public static final int NOTES = 22;
+    public static final int SELF = 8;
+    public static final int KICK = 8;
+    public static final int ADV = 6;
+    public static final int ITEM = 6;
 
     public static Component chat(ServerPlayer p) {
         if (Fear.RNG.nextInt(3) == 0)
@@ -48,6 +53,23 @@ public final class Msg {
             pages.add(StringTag.valueOf(Component.Serializer.toJson(
                     Component.translatable("herobrine.book." + i, p.getGameProfile().getName()))));
         }
+        tag.put("pages", pages);
+        tag.putBoolean("resolved", true);
+        return book;
+    }
+
+    /** One page, unsigned: a hint that he knows. Your name, the day, where your home is. */
+    public static ItemStack note(ServerPlayer p) {
+        ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
+        CompoundTag tag = book.getOrCreateTag();
+        tag.putString("title", Fear.RNG.nextInt(3) == 0 ? "..." : "");
+        tag.putString("author", "");
+        net.minecraft.core.BlockPos home = Slow.home(p);
+        String where = home.getX() + " " + home.getY() + " " + home.getZ();
+        String day = String.valueOf(HauntData.get(p.getServer()).player(p.getUUID()).days);
+        ListTag pages = new ListTag();
+        pages.add(StringTag.valueOf(Component.Serializer.toJson(
+                Component.translatable("herobrine.note." + Fear.RNG.nextInt(NOTES), p.getGameProfile().getName(), day, where))));
         tag.put("pages", pages);
         tag.putBoolean("resolved", true);
         return book;

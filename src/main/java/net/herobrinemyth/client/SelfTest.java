@@ -36,6 +36,7 @@ public final class SelfTest {
     private static final String WORLD = ENDING ? "HerobrineEndingTest" : "HerobrineSelfTest";
     private static int endingTicks;
     private static int setupTicks, packWait;
+    private static boolean subtitles;
 
     private record Step(int at, Consumer<Minecraft> run) {}
 
@@ -72,7 +73,9 @@ public final class SelfTest {
     }
 
     static {
-        if (MODE.equals("v13")) {
+        if (MODE.equals("v14")) {
+            v14Steps();
+        } else if (MODE.equals("v13")) {
             v13Steps();
         } else if (MODE.equals("v12")) {
             v12Steps();
@@ -136,6 +139,63 @@ public final class SelfTest {
         cmd(t + 340, "herobrine trigger footsteps");
         cmd(t + 341, "herobrine trigger mining");
         STEPS.add(new Step(t + 420, mc -> {
+            HerobrineMyth.LOGGER.info("[selftest] done");
+            mc.stop();
+        }));
+    }
+
+    /** 1.4: babies and chickens with his eyes, every rain red, a darker day, a row of them, thrown out. */
+    private static void v14Steps() {
+        int t = 120;
+        cmd(t - 12, "gamerule sendCommandFeedback false");
+        STEPS.add(new Step(t - 11, mc -> {
+            mc.getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
+            mc.getToasts().clear();
+            mc.gui.getChat().clearMessages(false);
+            subtitles = mc.options.showSubtitles().get();
+            mc.options.showSubtitles().set(false);
+        }));
+        cmd(t - 10, "gamemode creative");
+        cmd(t - 9, "tp @s ~ 101 ~ 0 0");
+        cmd(t - 8, "fill ~-40 ~-1 ~-40 ~40 ~-1 ~40 grass_block");
+        cmd(t - 7, "fill ~-30 ~ ~-30 ~30 ~5 ~30 air");
+        cmd(t - 6, "place feature minecraft:oak ~3 ~ ~14");
+        cmd(t - 5, "place feature minecraft:oak ~-6 ~ ~18");
+        cmd(t - 4, "kill @e[type=!player]");
+        cmd(t - 3, "gamerule doDaylightCycle false");
+        cmd(t - 2, "gamerule doMobSpawning false");
+        cmd(t - 1, "time set 6000");
+        cmd(t, "weather clear");
+        cmd(t + 1, "tp @s ~ ~ ~ 0 8");
+        shot(t + 40, "y01_darker_day");
+        cmd(t + 45, "weather rain");
+        shot(t + 120, "y02_red_rain");
+        cmd(t + 125, "weather clear");
+        cmd(t + 130, "summon zombie ^-2.4 ^ ^4 {IsBaby:1b,NoAI:1b}");
+        cmd(t + 131, "summon zombie_villager ^-1 ^ ^5 {NoAI:1b}");
+        cmd(t + 132, "summon zombie_villager ^0.3 ^ ^4 {IsBaby:1b,NoAI:1b}");
+        cmd(t + 133, "summon pig ^1.5 ^ ^4 {Age:-24000,NoAI:1b}");
+        cmd(t + 134, "summon cow ^2.8 ^ ^5 {Age:-24000,NoAI:1b}");
+        cmd(t + 135, "summon chicken ^-0.6 ^ ^3 {NoAI:1b}");
+        cmd(t + 136, "summon chicken ^3.6 ^ ^4 {Age:-24000,NoAI:1b}");
+        cmd(t + 137, "summon villager ^-3.6 ^ ^5 {Age:-24000,NoAI:1b}");
+        cmd(t + 140, "time set 18000");
+        cmd(t + 145, "herobrine trigger animals");
+        cmd(t + 146, "herobrine trigger possess_mobs");
+        shot(t + 175, "y03_eyes");
+        cmd(t + 180, "kill @e[type=!player]");
+        cmd(t + 185, "herobrine trigger crowd");
+        shot(t + 215, "y04_crowd");
+        cmd(t + 220, "kill @e[type=!player]");
+        cmd(t + 222, "time set 6000");
+        cmd(t + 225, "herobrine trigger human_camp");
+        cmd(t + 226, "herobrine trigger human_pillar");
+        cmd(t + 230, "tp @s ~ ~ ~ 180 8");
+        shot(t + 260, "y05_traces");
+        STEPS.add(new Step(t + 262, mc -> mc.options.showSubtitles().set(subtitles)));
+        cmd(t + 265, "herobrine trigger kick");
+        shot(t + 330, "y06_kick");
+        STEPS.add(new Step(t + 360, mc -> {
             HerobrineMyth.LOGGER.info("[selftest] done");
             mc.stop();
         }));
@@ -412,7 +472,7 @@ public final class SelfTest {
             if (setupTicks == 200) mc.stop();
             return;
         }
-        if (MODE.equals("v13") && !started) {
+        if ((MODE.equals("v13") || MODE.equals("v14")) && !started) {
             // wait until the old textures pack has been built and switched on
             if (!java.nio.file.Files.exists(ClassicPack.dir(mc).resolve("herobrinemyth-pack-v1")) || ++packWait < 200) return;
         }
@@ -438,6 +498,12 @@ public final class SelfTest {
                 HerobrineMyth.LOGGER.info("[selftest] ending done");
                 mc.stop();
             }
+            return;
+        }
+        if (MODE.equals("v14") && mc.screen instanceof net.minecraft.client.gui.screens.DisconnectedScreen) {
+            endingTicks++;
+            if (endingTicks == 40) pendingShot = "y06_kick";
+            if (endingTicks == 80) mc.stop();
             return;
         }
         if (mc.player == null || mc.level == null) return;

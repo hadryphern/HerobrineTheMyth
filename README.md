@@ -40,6 +40,11 @@ It is a **slow burn**. On day one almost nothing happens: a cave sound you are n
 - **You choose the pace** when you create a world: he gets stronger every N days or every N minutes.
 - **He prefers the night**, and the world is almost empty: very few animals and very few monsters.
 - **Hit an animal and it may become his.** A ghast screams, and its eyes are white now.
+- **Animals that stare.** Some stop and follow you with their heads. Some only stare while your back is turned. Some say "pss..." as you walk past.
+- **Someone else was here:** a pillar of cobblestone, a tree chopped halfway, a crafting table and a furnace in a field, a staircase going down.
+- **Don't break his things.** Lightning, him, his mobs, lava, a deep cave. "Don't do that again..."
+- **Blood moon:** some nights are one night of chaos.
+- **Every rain is red.**
 
 | | |
 |:-:|:-:|
@@ -47,6 +52,8 @@ It is a **slow burn**. On day one almost nothing happens: a cave sound you are n
 | **He watches.** From far away, behind trees, in the dark. Look too long and he is gone. | **Possessed mobs.** Vanilla mobs with his white eyes stare at you in silence, then all come at once. |
 | ![Blood rain](docs/images/blood_rain.jpg) | ![Jumpscare](docs/images/jumpscare.jpg) |
 | **Blood rain.** Night falls at once. | **His face.** Rare, and never when you expect it. |
+| ![Babies too](docs/images/possessed_herd.jpg) | ![Red rain](docs/images/red_rain.jpg) |
+| **Nothing is safe.** Not even the chickens. | **Every rain is red.** |
 
 **Haunting**
 - Total silence: every sound in the game stops.
@@ -55,14 +62,19 @@ It is a **slow burn**. On day one almost nothing happens: a cave sound you are n
 - Doors and chests opening on their own.
 - Fake chat: "Herobrine joined the game".
 - Old-TV static.
+- Breathing in your ear. Your name. Someone eating behind you. Music, as if something were chasing you.
+- Things thrown at you from the dark. Notes that know your name, your day, your home.
 
 **Appearances**
 - Far away, right where you are looking, for two seconds.
-- Behind the trees.
+- Behind the trees, in your doorway, on the roof, closer and closer behind you.
+- A plain Steve in the dark of a cave, taking small steps towards you.
 - He only moves when you are not looking.
 - He chases you.
 - He takes control of your body.
 - He drags you into an empty cave.
+- Villagers, cows, pigs or chickens come for you, out of nowhere.
+- He throws you out to the title screen (your world is saved first).
 
 **Classic behaviours**
 - The ghost with a redstone torch who vanishes when you step towards him.
@@ -134,7 +146,8 @@ Config file: `config/herobrinemyth-common.toml`. You can set:
 - **The pace:** a day scale and events per day (the speed itself is chosen per world when you create it).
 - **What he may do:** break blocks, damage your house, kill you, burn, corrupt and eat chunks, each with its own starting day.
 - **The totem and the ending:** what happens after the totem, and what "taking the world" does.
-- **The atmosphere:** classic sounds, echo, overcast sky, old textures, old lighting and the old look.
+- **The atmosphere:** classic sounds, echo, overcast sky, red rain, old textures, old lighting and the old look.
+- **1.4 extras:** blood moons, being thrown out, structure punishments, shared multiplayer events, small random damage, the totem bosses.
 
 <details>
 <summary>Commands (op)</summary>
@@ -147,6 +160,7 @@ Config file: `config/herobrinemyth-common.toml`. You can set:
 | `/herobrine totem activate` / `reset` | Summon him / undo it |
 | `/herobrine day <players> <day>` | Forces the day of the haunting (0 = automatic) |
 | `/herobrine calm` | He backs off for a while |
+| `/herobrine bloodmoon` | Tonight the moon is red |
 | `/summon herobrinemyth:herobrine ~ ~ ~ {HBMode:"SHRINE",HBLife:600}` | Places him for videos |
 
 </details>

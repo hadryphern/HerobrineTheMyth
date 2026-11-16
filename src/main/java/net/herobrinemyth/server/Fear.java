@@ -61,11 +61,48 @@ public final class Fear {
         Net.send(p, new Net.Effect(type, duration, intensity, pos.x, pos.y, pos.z, extra));
     }
 
-    /** His face, still, with human eyes, on black. One classic scream. */
+    /** His face, black eyes, on black. One classic scream. Sometimes everyone gets it, even far away. */
     public static void jumpscare(ServerPlayer p) {
-        // his face, completely black eyes
+        jumpscareOne(p);
+        if (shared(0.12)) for (ServerPlayer o : everyone(p)) if (o != p) jumpscareOne(o);
+    }
+
+    private static void jumpscareOne(ServerPlayer p) {
         fx(p, Fx.JUMPSCARE, 30, 0.9F);
         sound(p, pick(new String[]{"entity.ghast.scream", "entity.horse.death", "entity.ghast.hurt"}), p.getEyePosition(), 1F, range(0.5F, 0.7F));
+    }
+
+    /** A very loud one: his face and a scream right in your ears. */
+    public static void loudJumpscare(ServerPlayer p) {
+        fx(p, Fx.JUMPSCARE, 34, 0.9F);
+        for (int i = 0; i < 3; i++)
+            Net.send(p, new Net.Sound(rl(i == 1 ? "entity.ghast.scream" : "entity.ghast.hurt"), 1F, range(0.5F, 0.6F), 0, 0, 0, true, 0, false));
+        Net.send(p, new Net.Sound(rl("entity.horse.death"), 1F, 0.5F, 0, 0, 0, true, 0, true));
+    }
+
+    // ---------------------------------------------------------------- shared (multiplayer)
+
+    /** In multiplayer, does this one reach the others too? */
+    public static boolean shared(double chance) {
+        return Config.SHARED_EVENTS.get() && RNG.nextDouble() < chance;
+    }
+
+    static java.util.List<ServerPlayer> everyone(ServerPlayer p) {
+        return p.getServer() == null ? java.util.List.of(p) : p.getServer().getPlayerList().getPlayers();
+    }
+
+    /** Players other than p who are close to pos. */
+    static java.util.List<ServerPlayer> near(ServerPlayer p, Vec3 pos, double radius) {
+        java.util.List<ServerPlayer> out = new java.util.ArrayList<>();
+        for (ServerPlayer o : everyone(p)) {
+            if (o != p && o.level() == p.level() && o.position().distanceToSqr(pos) < radius * radius) out.add(o);
+        }
+        return out;
+    }
+
+    private static void soundShared(ServerPlayer p, Net.Sound s) {
+        Net.send(p, s);
+        if (shared(0.8)) for (ServerPlayer o : near(p, new Vec3(s.x(), s.y(), s.z()), 40)) Net.send(o, s);
     }
 
     /** The face for 1-2 frames. No sound. Did you see that? */
@@ -81,16 +118,16 @@ public final class Fear {
     // ---------------------------------------------------------------- sounds
 
     public static void sound(ServerPlayer p, String id, Vec3 pos, float volume, float pitch) {
-        Net.send(p, new Net.Sound(rl(id), volume, pitch, pos.x, pos.y, pos.z, false, 0, false));
+        soundShared(p, new Net.Sound(rl(id), volume, pitch, pos.x, pos.y, pos.z, false, 0, false));
     }
 
     /** Slowed down, with a long echo. */
     public static void soundReverb(ServerPlayer p, String id, Vec3 pos, float volume, float pitch) {
-        Net.send(p, new Net.Sound(rl(id), volume, pitch, pos.x, pos.y, pos.z, false, 0, true));
+        soundShared(p, new Net.Sound(rl(id), volume, pitch, pos.x, pos.y, pos.z, false, 0, true));
     }
 
     public static void soundStopping(ServerPlayer p, String id, Vec3 pos, float volume, float pitch, int stopAfter) {
-        Net.send(p, new Net.Sound(rl(id), volume, pitch, pos.x, pos.y, pos.z, false, stopAfter, true));
+        soundShared(p, new Net.Sound(rl(id), volume, pitch, pos.x, pos.y, pos.z, false, stopAfter, true));
     }
 
     /** right/up/forward relative to where the player is looking when it arrives. */
@@ -120,14 +157,19 @@ public final class Fear {
     public static void phantomSteps(ServerPlayer p, Vec3 from, Vec3 dir, int duration) {
         BlockState under = p.level().getBlockState(BlockPos.containing(from).below());
         if (under.isAir()) under = p.level().getBlockState(p.blockPosition().below());
-        Net.send(p, new Net.Phantom(0, from.x, from.y, from.z, dir.x, dir.z, duration, rl(stepSound(under)), rl(stepSound(under))));
+        phantomShared(p, new Net.Phantom(0, from.x, from.y, from.z, dir.x, dir.z, duration, rl(stepSound(under)), rl(stepSound(under))));
+    }
+
+    private static void phantomShared(ServerPlayer p, Net.Phantom ph) {
+        Net.send(p, ph);
+        if (shared(0.8)) for (ServerPlayer o : near(p, new Vec3(ph.x(), ph.y(), ph.z()), 40)) Net.send(o, ph);
     }
 
     /** Someone mining at pos. Stops when looked at. */
     public static void phantomMining(ServerPlayer p, BlockPos pos, int duration) {
         BlockState s = p.level().getBlockState(pos);
         Vec3 c = Vec3.atCenterOf(pos);
-        Net.send(p, new Net.Phantom(1, c.x, c.y, c.z, 0, 0, duration,
+        phantomShared(p, new Net.Phantom(1, c.x, c.y, c.z, 0, 0, duration,
                 s.getSoundType().getHitSound().getLocation(), s.getSoundType().getBreakSound().getLocation()));
     }
 
@@ -136,13 +178,13 @@ public final class Fear {
         BlockState s = p.level().getBlockState(pos);
         if (s.isAir()) s = net.minecraft.world.level.block.Blocks.COBBLESTONE.defaultBlockState();
         Vec3 c = Vec3.atCenterOf(pos);
-        Net.send(p, new Net.Phantom(2, c.x, c.y, c.z, 0, 0, duration,
+        phantomShared(p, new Net.Phantom(2, c.x, c.y, c.z, 0, 0, duration,
                 s.getSoundType().getPlaceSound().getLocation(), s.getSoundType().getBreakSound().getLocation()));
     }
 
     /** Someone knocking on a door. */
     public static void phantomKnock(ServerPlayer p, Vec3 at, int duration) {
-        Net.send(p, new Net.Phantom(3, at.x, at.y, at.z, 0, 0, duration, rl("entity.zombie.attack_wooden_door"), rl("block.wooden_door.open")));
+        phantomShared(p, new Net.Phantom(3, at.x, at.y, at.z, 0, 0, duration, rl("entity.zombie.attack_wooden_door"), rl("block.wooden_door.open")));
     }
 
     // ---------------------------------------------------------------- damage
@@ -175,16 +217,27 @@ public final class Fear {
         Net.send(p, new Net.Text(c, duration, 3));
     }
 
-    /** "<Herobrine> ..." in chat, formatted exactly like a real player. Only this player sees it. */
+    /** "<Herobrine> ..." in chat, formatted exactly like a real player. Half the time everyone sees it. */
     public static void chat(ServerPlayer p, Component msg) {
         if (!Config.FAKE_CHAT.get()) return;
-        p.sendSystemMessage(Component.literal("<Herobrine> ").append(msg));
+        Component line = Component.literal("<Herobrine> ").append(msg);
+        if (shared(0.5)) for (ServerPlayer o : everyone(p)) o.sendSystemMessage(line);
+        else p.sendSystemMessage(line);
+    }
+
+    /** "<Herobrine> ..." for everyone, always. */
+    public static void chatAll(ServerPlayer p, Component msg) {
+        if (!Config.FAKE_CHAT.get()) return;
+        Component line = Component.literal("<Herobrine> ").append(msg);
+        for (ServerPlayer o : everyone(p)) o.sendSystemMessage(line);
     }
 
     /** A message with no name at all. */
     public static void nameless(ServerPlayer p, Component msg) {
         if (!Config.FAKE_CHAT.get()) return;
-        p.sendSystemMessage(Component.literal("<> ").append(msg));
+        Component line = Component.literal("<> ").append(msg);
+        if (shared(0.5)) for (ServerPlayer o : everyone(p)) o.sendSystemMessage(line);
+        else p.sendSystemMessage(line);
     }
 
     public static void joined(ServerPlayer p) {

@@ -158,6 +158,16 @@ public final class Totem {
             Fear.chat(sp, Component.translatable("herobrine.totem.1", sp.getGameProfile().getName()));
             for (ServerPlayer p : sp.getServer().getPlayerList().getPlayers()) Fear.fx(p, Fx.HEARTBEAT, 20 * 20, 1F);
         });
+        // and what he brings with him: the Wither, the Warden, or the Dragon
+        if (!already && Fear.RNG.nextInt(3) != 0) {
+            Scheduler.later(summoner, 20 * (40 + Fear.RNG.nextInt(60)), sp -> {
+                switch (Fear.RNG.nextInt(3)) {
+                    case 0 -> Terror.wither(sp);
+                    case 1 -> Terror.warden(sp);
+                    default -> Terror.dragon(sp);
+                }
+            });
+        }
     }
 
     private Totem() {}

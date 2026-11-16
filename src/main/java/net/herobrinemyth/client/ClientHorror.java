@@ -70,6 +70,8 @@ public final class ClientHorror {
 
     static boolean crashPending, takePending;
 
+    static int kickPending = -1;
+
     // the day of the haunting, as told by the server
     static int moodDay;
     static int blood, bloodMax;
@@ -198,6 +200,12 @@ public final class ClientHorror {
         if (crashPending) {
             crashPending = false;
             Endings.crash();
+            return;
+        }
+        if (kickPending >= 0) {
+            int which = kickPending;
+            kickPending = -1;
+            Endings.kick(which);
             return;
         }
         if (takePending) {

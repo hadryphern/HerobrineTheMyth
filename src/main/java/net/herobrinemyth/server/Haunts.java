@@ -117,6 +117,42 @@ public final class Haunts {
         minor("launch", 20, 1, Classic::launch);
         minor("tnt", 22, 1, Classic::tnt);
 
+        // ---------------------------------------------------- 1.4: he is real, and he is here
+        minor("stare", 2, 5, Staring::animals);
+        minor("pickup", 2, 3, Terror::pickup);
+        minor("pss", 3, 4, Staring::pss);
+        minor("breath", 3, 4, Terror::breath);
+        minor("name_whisper", 3, 3, Terror::nameWhisper);
+        minor("far_hurt", 3, 3, Terror::farHurt);
+        minor("notes", 3, 2, Terror::notes);
+        minor("human_pillar", 3, 3, Human::pillar);
+        minor("human_tree", 3, 3, Human::halfTree);
+        minor("back_turned", 4, 4, Staring::backTurned);
+        minor("eating", 4, 2, Terror::eating);
+        minor("thrown", 4, 3, Terror::thrown);
+        minor("bell", 4, 2, Terror::bell);
+        minor("furnace", 4, 2, Terror::furnace);
+        minor("human_holes", 4, 2, Human::holes);
+        minor("human_camp", 4, 3, Human::camp);
+        minor("sting", 5, 3, Terror::sting);
+        minor("torch_trail", 5, 2, Terror::torchTrail);
+        minor("human_stairs", 5, 2, Human::stairsDown);
+        minor("human_mined", 5, 2, Human::mined);
+        minor("fake_death", 6, 2, Terror::fakeDeath);
+        minor("flicker", 6, 3, Terror::flicker);
+        minor("pistons", 6, 2, Terror::pistons);
+        minor("human_hut", 6, 2, Human::hut);
+        minor("self_chat", 7, 2, Terror::selfChat);
+        minor("advancement", 8, 1, Terror::fakeAdvancement);
+        minor("sign_edit", 8, 2, Terror::signEdit);
+        minor("kill_animals", 8, 2, Human::killAnimals);
+        minor("darkness", 9, 2, Terror::darkness);
+        minor("arrow", 9, 2, Terror::arrow);
+        minor("rename", 10, 1, Terror::renameItem);
+        minor("chest_shuffle", 10, 1, Terror::chestShuffle);
+        minor("burn_grass", 10, 2, Human::burnGrass);
+        minor("glass", 12, 1, Terror::glassBreak);
+
         // ---------------------------------------------------- him
         major("stalk", 2, 8, Haunts::stalk);
         major("peek", 2, 6, Haunts::peek);
@@ -154,6 +190,21 @@ public final class Haunts {
         major("fight", 24, 1, Haunts::fight);
         major("swarm", 25, 2, p -> Possession.swarm(p, 8 + Fear.RNG.nextInt(8)));
 
+        major("steve_dark", 3, 4, Terror::steveDark);
+        major("steve_behind", 4, 3, Terror::steveBehind);
+        major("roof", 4, 3, Terror::roof);
+        major("doorway", 5, 3, Terror::doorway);
+        major("closer", 6, 3, Terror::closer);
+        major("group_attack", 6, 3, Terror::groupAttack);
+        major("chase_music", 6, 3, Terror::chaseMusic);
+        major("audience", 7, 2, Terror::audience);
+        major("crowd", 8, 2, Terror::crowd);
+        major("hunters", 9, 3, Terror::hunters);
+        major("lightning_walk", 9, 2, Terror::lightningWalk);
+        ALL.put("kick", new Haunt("kick", true, 8, 1, false, DAY * 2, Terror::kick));
+        ALL.put("burn_forest", new Haunt("burn_forest", true, 10, 1, false, DAY, Human::burnForest));
+        ALL.put("burn_village", new Haunt("burn_village", true, 12, 1, false, DAY * 2, Human::burnVillage));
+
         // ---------------------------------------------------- after the totem
         totem("chunk", 3, Corruption::eatChunk);
         totem("corrupt", 6, Corruption::corrupt);
@@ -161,6 +212,9 @@ public final class Haunts {
         totem("storm", 4, Corruption::storm);
         totem("crash", 0, Corruption::crash);
         totem("take_world", 0, Corruption::takeWorld);
+        ALL.put("wither", new Haunt("wither", true, 100, 1, true, 20 * 60 * 24, Terror::wither));
+        ALL.put("warden", new Haunt("warden", true, 100, 1, true, 20 * 60 * 16, Terror::warden));
+        ALL.put("dragon", new Haunt("dragon", true, 100, 1, true, 20 * 60 * 32, Terror::dragon));
     }
 
     public static int level(ServerPlayer p) {
@@ -195,20 +249,7 @@ public final class Haunts {
             if (st.recent.contains(h.id)) continue;
             Long last = st.lastRun.get(h.id);
             if (last != null && now - last < (totem ? h.cooldown / 4 : h.cooldown)) continue;
-            int w = h.weight;
-            switch (h.id) {
-                case "whisper", "mining", "dark", "eyes", "crack", "knock" -> w *= under ? 3 : (night || dark ? 2 : 1);
-                case "peek", "lightning", "build", "wander", "pike", "heads", "window", "blood_rain" -> w *= under ? 0 : 1;
-                case "diamonds" -> w *= under ? 2 : 1;
-                case "stalk", "ghost" -> w *= night || dark ? 2 : 1;
-                case "separate" -> w *= p.getServer().getPlayerCount() > 1 ? 3 : 0;
-                case "tree" -> w = under ? 0 : Math.min(9, 1 + day / 3); // rare at first, common later
-                case "chat", "nameless" -> w *= night ? 3 : 1;
-                case "glimpse" -> w *= night || under ? 2 : 1;
-                case "fight", "chase", "clones", "possess", "guards", "swarm" -> w *= totem ? 3 : 1;
-                default -> {
-                }
-            }
+            int w = weight(h, p, day, totem, under, night, dark);
             if (w <= 0) continue;
             pool.add(h);
             weights.add(w);
@@ -232,6 +273,34 @@ public final class Haunts {
             }
         }
         return false;
+    }
+
+    /** By day he shows himself and leaves things. By night: sounds, whispers, the mind, the chase. */
+    private static int weight(Haunt h, ServerPlayer p, int day, boolean totem, boolean under, boolean night, boolean dark) {
+        int w = h.weight;
+        boolean daylight = !night && !under;
+        switch (h.id) {
+            case "whisper", "mining", "dark", "eyes", "crack", "knock" -> w *= under ? 3 : (night || dark ? 2 : 1);
+            case "peek", "lightning", "build", "wander", "pike", "heads", "window", "blood_rain", "roof", "crowd", "lightning_walk",
+                 "burn_forest", "burn_village", "burn_grass", "human_pillar", "human_tree", "human_camp", "human_hut", "human_holes",
+                 "torch_trail", "thrown", "doorway", "audience", "kill_animals" -> w *= under ? 0 : (daylight ? 2 : 1);
+            case "diamonds", "human_mined", "human_stairs" -> w *= under ? 2 : 1;
+            case "pistons" -> w *= under ? 3 : 0;
+            case "steve_dark" -> w *= under || dark ? 3 : 0;
+            case "steve_behind" -> w *= night || dark ? 2 : 0;
+            case "bell" -> w *= night && !under ? 2 : 0;
+            case "stalk", "ghost" -> w *= night || dark ? 2 : 1;
+            case "separate" -> w *= p.getServer().getPlayerCount() > 1 ? 3 : 0;
+            case "tree" -> w = under ? 0 : Math.min(9, 1 + day / 3); // rare at first, common later
+            case "chat", "nameless", "self_chat" -> w *= night ? 3 : 1;
+            case "glimpse", "steve" -> w *= night || under ? 2 : (daylight ? 2 : 1);
+            case "footsteps", "breath", "name_whisper", "notes", "darkness", "flicker", "back_turned", "chase_music", "closer",
+                 "hunters", "far_hurt" -> w *= night || dark ? 2 : 1;
+            case "fight", "chase", "clones", "possess", "guards", "swarm" -> w *= totem ? 3 : (night ? 2 : 1);
+            default -> {
+            }
+        }
+        return w;
     }
 
     public static boolean trigger(String id, ServerPlayer p) {
@@ -280,7 +349,7 @@ public final class Haunts {
         back = back.normalize();
         double side = Fear.RNG.nextGaussian() * 0.4;
         Vec3 dir = back.add(back.z * side, 0, -back.x * side).normalize();
-        Vec3 from = p.position().add(dir.scale(11 + Fear.RNG.nextInt(5)));
+        Vec3 from = p.position().add(dir.scale(7 + Fear.RNG.nextInt(4)));
         BlockPos ground = Spots.standable(p.serverLevel(), Mth.floor(from.x), p.getBlockY(), Mth.floor(from.z), 4);
         if (ground != null) from = new Vec3(from.x, ground.getY() + 0.1, from.z);
         Fear.phantomSteps(p, from, dir.scale(-1), 20 * 40);
@@ -439,22 +508,22 @@ public final class Haunts {
     }
 
     public static boolean stalk(ServerPlayer p) {
-        Vec3 v = Spots.findLurking(p, 18, 45);
-        if (v == null) v = Spots.findWatchingSpot(p, 12, 30, 15, 20);
+        Vec3 v = Spots.findLurking(p, 10, 22);
+        if (v == null) v = Spots.findWatchingSpot(p, 9, 20, 15, 20);
         if (v == null) return false;
         return HerobrineEntity.spawn(p, v, Mode.STALK, life(90)) != null;
     }
 
     public static boolean peek(ServerPlayer p) {
-        Vec3 v = Spots.behindTree(p, 10, 30);
+        Vec3 v = Spots.behindTree(p, 7, 18);
         if (v == null) return stalk(p);
         return HerobrineEntity.spawn(p, v, Mode.PEEK, life(60)) != null;
     }
 
     /** No eyes. Just a shape in the dark. */
     public static boolean dark(ServerPlayer p) {
-        Vec3 v = Spots.findWatchingSpot(p, 8, 22, 3, 30);
-        if (v == null) v = Spots.findLurking(p, 10, 24);
+        Vec3 v = Spots.findWatchingSpot(p, 6, 14, 3, 30);
+        if (v == null) v = Spots.findLurking(p, 7, 16);
         if (v == null) return false;
         return HerobrineEntity.spawn(p, v, Mode.DARK, life(80)) != null;
     }
@@ -463,7 +532,7 @@ public final class Haunts {
         int n = 1 + Fear.RNG.nextInt(HauntData.get(p.getServer()).totem ? 8 : 3);
         int placed = 0;
         for (int i = 0; i < n * 3 && placed < n; i++) {
-            Vec3 v = Spots.findWatchingSpot(p, 9, 26, 4, 6);
+            Vec3 v = Spots.findWatchingSpot(p, 6, 16, 4, 6);
             if (v == null) continue;
             if (HerobrineEyesEntity.spawn(p, v.add(0, 1.62, 0), life(40 + Fear.RNG.nextInt(30))) != null) placed++;
         }
@@ -489,7 +558,7 @@ public final class Haunts {
 
     /** Only moves when you are not looking. */
     public static boolean approach(ServerPlayer p) {
-        Vec3 v = Spots.findWatchingSpot(p, 16, 26, 15, 30);
+        Vec3 v = Spots.findWatchingSpot(p, 11, 17, 15, 30);
         if (v == null) return false;
         Fear.fx(p, Fx.FOG, life(60), 0.55F);
         Fear.fx(p, Fx.HEARTBEAT, life(60), 1F);
@@ -507,7 +576,7 @@ public final class Haunts {
         int n = totem ? 10 + Fear.RNG.nextInt(10) : 4 + Fear.RNG.nextInt(5);
         int placed = 0;
         for (int i = 0; i < n * 2 && placed < n; i++) {
-            Vec3 v = Spots.findWatchingSpot(p, 10, 34, 15, 6);
+            Vec3 v = Spots.findWatchingSpot(p, 7, 20, 15, 6);
             if (v == null) continue;
             if (HerobrineEntity.spawn(p, v, Mode.CLONE, life(70)) != null) placed++;
         }
@@ -519,7 +588,7 @@ public final class Haunts {
 
     public static boolean chase(ServerPlayer p) {
         if (Artifacts.protectedFromHim(p)) return false;
-        Vec3 v = Spots.findWatchingSpot(p, 14, 22, 15, 30);
+        Vec3 v = Spots.findWatchingSpot(p, 10, 16, 15, 30);
         if (v == null) v = Spots.behind(p, 12);
         if (v == null) return false;
         boolean totem = HauntData.get(p.getServer()).totem;

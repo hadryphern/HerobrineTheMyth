@@ -83,27 +83,27 @@ public final class Phantoms {
             if (--ph.timer > 0) continue;
             switch (ph.kind) {
                 case 0 -> { // footsteps: a slow walk, getting closer
-                    play(ph, ph.sound, 0.35F, 0.85F + ClientHorror.RNG.nextFloat() * 0.15F);
+                    play(ph, ph.sound, 1.0F, 0.85F + ClientHorror.RNG.nextFloat() * 0.15F);
                     if (dist > 3.5) ph.pos = ph.pos.add(ph.dir.scale(0.65));
                     ph.timer = 8 + ClientHorror.RNG.nextInt(3);
                     if (ClientHorror.RNG.nextInt(14) == 0) ph.timer += 30; // a pause. listening.
                 }
                 case 1 -> { // mining: hits, then the block breaks, then a pause
                     if (++ph.hits <= 5 + ClientHorror.RNG.nextInt(3)) {
-                        play(ph, ph.sound, 0.5F, 0.6F);
+                        play(ph, ph.sound, 1.1F, 0.6F);
                         ph.timer = 4;
                     } else {
-                        play(ph, ph.sound2, 0.8F, 0.8F);
+                        play(ph, ph.sound2, 1.4F, 0.8F);
                         ph.hits = 0;
                         ph.timer = 25 + ClientHorror.RNG.nextInt(40);
                     }
                 }
                 case 2 -> { // building
-                    play(ph, ph.sound, 0.6F, 0.8F);
+                    play(ph, ph.sound, 1.1F, 0.8F);
                     ph.timer = 10 + ClientHorror.RNG.nextInt(25);
                 }
                 default -> { // knocking, three by three
-                    play(ph, ph.sound, 0.7F, 0.7F + ClientHorror.RNG.nextFloat() * 0.1F);
+                    play(ph, ph.sound, 1.3F, 0.7F + ClientHorror.RNG.nextFloat() * 0.1F);
                     ph.timer = ++ph.hits % 3 == 0 ? 50 + ClientHorror.RNG.nextInt(60) : 9;
                 }
             }

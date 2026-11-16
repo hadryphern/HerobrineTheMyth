@@ -30,6 +30,7 @@ public final class ServerEvents {
         Scheduler.tick();
         long now = Scheduler.now();
         Possession.tick(server);
+        Staring.tick(server);
         Corruption.tickEaters();
         Graveyard.tick(server);
         Corruption.worldTick(server, now);
@@ -80,6 +81,7 @@ public final class ServerEvents {
     public static void onStopped(ServerStoppedEvent event) {
         Scheduler.clear();
         Possession.clear();
+        Staring.clear();
         Corruption.clear();
         Graveyard.clear();
     }
@@ -137,6 +139,8 @@ public final class ServerEvents {
             event.setCanceled(true);
             return;
         }
+        // one of his blocks?
+        if (p.level().dimension() == net.minecraft.world.level.Level.OVERWORLD) Punish.broke(p, event.getPos());
         if (!Config.ENABLED.get() || !Config.ALLOW_BLOCK_SCARE.get()) return;
         if (p.isCreative() && !Config.HAUNT_CREATIVE.get()) return;
         BlockState s = event.getState();

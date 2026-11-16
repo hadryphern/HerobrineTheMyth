@@ -172,7 +172,7 @@ public final class HerobrineGameTests {
         List<String> errors = new ArrayList<>();
         int i = 0;
         for (Haunts.Haunt haunt : Haunts.ALL.values()) {
-            if (haunt.id().equals("crash") || haunt.id().equals("take_world")) continue;
+            if (java.util.Set.of("crash", "take_world", "kick", "wither", "warden", "dragon").contains(haunt.id())) continue;
             h.runAfterDelay(1 + i * 4L, () -> {
                 try {
                     haunt.run().test(p);
@@ -186,6 +186,49 @@ public final class HerobrineGameTests {
         h.runAfterDelay(1100, () -> {
             h.assertTrue(errors.isEmpty(), "haunt errors: " + errors);
             h.assertTrue(Scheduler.failures == before, "scheduled steps failed: " + (Scheduler.failures - before));
+            h.succeed();
+        });
+    }
+
+    /** Blocks of his structures are remembered; breaking one is noticed once. */
+    @GameTest(template = "empty", timeoutTicks = 40)
+    public static void structureBlocksAreMarked(GameTestHelper h) {
+        ServerLevel level = h.getLevel();
+        BlockPos at = h.absolutePos(new BlockPos(4, 2, 4));
+        Builder.set(level, at, Blocks.COBBLESTONE.defaultBlockState());
+        HauntData data = HauntData.get(level.getServer());
+        h.assertTrue(data.unmark(at), "a block he placed must be remembered");
+        h.assertTrue(!data.unmark(at), "and forgotten once it is broken");
+        h.assertTrue(!data.unmark(at.above(3)), "other blocks are not his");
+        h.succeed();
+    }
+
+    /** Animals that stop and stare, without his eyes. */
+    @GameTest(template = "empty", timeoutTicks = 60)
+    public static void animalsStopAndStare(GameTestHelper h) {
+        for (int x = 0; x < 16; x++) for (int z = 0; z < 16; z++) h.setBlock(new BlockPos(x, 0, z), Blocks.GRASS_BLOCK);
+        ServerPlayer p = player(h, 8, 1, 2);
+        net.minecraft.world.entity.animal.Cow cow = h.spawn(EntityType.COW, new BlockPos(8, 1, 10));
+        h.assertTrue(net.herobrinemyth.server.Staring.animals(p), "there is a cow to stare");
+        h.runAfterDelay(5, () -> {
+            h.assertTrue(cow.isNoAi(), "the cow must stop");
+            h.assertTrue(!Possession.isPossessed(cow), "without his eyes");
+            h.succeed();
+        });
+    }
+
+    /** After the totem: the bosses he can bring. */
+    @GameTest(template = "empty", timeoutTicks = 40, batch = "zz_bosses")
+    public static void totemBossesSpawn(GameTestHelper h) {
+        for (int x = 0; x < 16; x++) for (int z = 0; z < 16; z++) h.setBlock(new BlockPos(x, 0, z), Blocks.STONE);
+        ServerPlayer p = player(h, 8, 1, 8);
+        boolean any = net.herobrinemyth.server.Terror.warden(p) | net.herobrinemyth.server.Terror.wither(p);
+        h.assertTrue(any, "a boss should spawn");
+        h.runAfterDelay(2, () -> {
+            AABB box = new AABB(h.absolutePos(BlockPos.ZERO)).inflate(40);
+            for (var e : h.getLevel().getEntitiesOfClass(net.minecraft.world.entity.Mob.class, box,
+                    m -> m instanceof net.minecraft.world.entity.monster.warden.Warden || m instanceof net.minecraft.world.entity.boss.wither.WitherBoss))
+                e.discard();
             h.succeed();
         });
     }
@@ -295,8 +338,12 @@ public final class HerobrineGameTests {
         ServerPlayer friend = player(h, 6, 1, 2);
         HerobrineEntity hb = HerobrineEntity.spawn(target, Vec3.atBottomCenterOf(h.absolutePos(new BlockPos(8, 1, 12))), HerobrineEntity.Mode.WATCH, 200);
         h.assertTrue(hb != null, "spawn");
+        // a normal sighting (rarely he is shared on purpose: that case is checked below)
+        hb.shared = false;
         h.assertTrue(hb.broadcastToPlayer(target), "the target sees him");
         h.assertTrue(!hb.broadcastToPlayer(friend), "the friend standing next to you sees nothing");
+        hb.shared = true;
+        h.assertTrue(hb.broadcastToPlayer(friend), "a shared sighting is seen by everyone");
         hb.discard();
         h.succeed();
     }
